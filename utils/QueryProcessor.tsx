@@ -40,6 +40,19 @@ export default function QueryProcessor(query: string): string {
     return result.toString();
   }
 
+  const primesMatch = query.match(/which of the following numbers are primes:\s*([\d,\s-]+)/i);
+  if (primesMatch) {
+    const isPrime = (n: number) => {
+      if (n < 2) return false;
+      for (let i = 2; i * i <= n; i++) {
+        if (n % i === 0) return false;
+      }
+      return true;
+    };
+    const numbers = primesMatch[1].split(",").map((n) => Number(n.trim()));
+    return numbers.filter(isPrime).join(", ");
+  }
+
   const largestMatch = query.match(/which of the following numbers is the largest:\s*([\d,\s-]+)/i);
   if (largestMatch) {
     const numbers = largestMatch[1].split(",").map((n) => Number(n.trim()));
