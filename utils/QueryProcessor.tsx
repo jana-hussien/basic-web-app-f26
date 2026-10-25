@@ -65,6 +65,23 @@ export default function QueryProcessor(query: string): string {
     return String(result);
   }
 
+  const scrabbleMatch = query.match(/what is the scrabble score of ([a-z]+)/i);
+  if (scrabbleMatch) {
+    const letterScores: { [letter: string]: number } = {};
+    const groups: [string, number][] = [
+      ["aeilnorstu", 1], ["dg", 2], ["bcmp", 3], ["fhvwy", 4],
+      ["k", 5], ["jx", 8], ["qz", 10],
+    ];
+    groups.forEach(([letters, score]) => {
+      letters.split("").forEach((letter) => (letterScores[letter] = score));
+    });
+    const score = scrabbleMatch[1]
+      .toLowerCase()
+      .split("")
+      .reduce((total, letter) => total + letterScores[letter], 0);
+    return String(score);
+  }
+
   const primesMatch = query.match(/which of the following numbers are primes:\s*([\d,\s-]+)/i);
   if (primesMatch) {
     const isPrime = (n: number) => {
