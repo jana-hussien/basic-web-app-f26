@@ -24,6 +24,22 @@ export default function QueryProcessor(query: string): string {
     return String(Number(plusMatch[1]) + Number(plusMatch[2]));
   }
 
+  const minusMatch = query.match(/what is (-?\d+) minus (-?\d+)/i);
+  if (minusMatch) {
+    return String(Number(minusMatch[1]) - Number(minusMatch[2]));
+  }
+
+  // BigInt keeps large powers exact instead of falling back to scientific notation
+  const powerMatch = query.match(/what is (-?\d+) to the power of (\d+)/i);
+  if (powerMatch) {
+    const base = BigInt(powerMatch[1]);
+    let result = BigInt(1);
+    for (let i = 0; i < Number(powerMatch[2]); i++) {
+      result *= base;
+    }
+    return result.toString();
+  }
+
   const largestMatch = query.match(/which of the following numbers is the largest:\s*([\d,\s-]+)/i);
   if (largestMatch) {
     const numbers = largestMatch[1].split(",").map((n) => Number(n.trim()));
