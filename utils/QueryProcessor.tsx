@@ -82,6 +82,14 @@ export default function QueryProcessor(query: string): string {
     return String(score);
   }
 
+  const anagramMatch = query.match(/which of the following is an anagram of ([a-z]+):\s*([a-z,\s]+)/i);
+  if (anagramMatch) {
+    const sortLetters = (word: string) => word.toLowerCase().split("").sort().join("");
+    const target = sortLetters(anagramMatch[1]);
+    const options = anagramMatch[2].split(",").map((word) => word.trim());
+    return options.filter((word) => sortLetters(word) === target).join(", ");
+  }
+
   const primesMatch = query.match(/which of the following numbers are primes:\s*([\d,\s-]+)/i);
   if (primesMatch) {
     const isPrime = (n: number) => {
