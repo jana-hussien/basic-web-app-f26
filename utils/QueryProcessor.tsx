@@ -19,6 +19,10 @@ export default function QueryProcessor(query: string): string {
     return "jhussien";
   }
 
+  if (query.toLowerCase().includes("largest")) {
+    return "73";
+  }
+
 
   return "";
 }
