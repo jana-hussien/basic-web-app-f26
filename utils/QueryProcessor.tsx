@@ -19,16 +19,16 @@ export default function QueryProcessor(query: string): string {
     return "jhussien";
   }
 
-  if (query.toLowerCase().includes("which of the following numbers is the largest: 42, 55, 73?")) {
-    return "73";
-  }
-  if (query.toLowerCase().includes("which of the following numbers is the largest: 46, 9, 53?")) {
-    return "53";
-  }
-  if (query.toLowerCase().includes("what is 3 plus 39?")) {
-    return "42";
+  const plusMatch = query.match(/what is (-?\d+) plus (-?\d+)/i);
+  if (plusMatch) {
+    return String(Number(plusMatch[1]) + Number(plusMatch[2]));
   }
 
+  const largestMatch = query.match(/which of the following numbers is the largest:\s*([\d,\s-]+)/i);
+  if (largestMatch) {
+    const numbers = largestMatch[1].split(",").map((n) => Number(n.trim()));
+    return String(Math.max(...numbers));
+  }
 
   return "";
 }
